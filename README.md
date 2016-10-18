@@ -3,6 +3,8 @@
 Bài viết này sẽ hướng dẫn cụ thể từng bước để tạo ra một hệ thống điều khiển led bằng giọng nói bằng Raspberry Pi. 
 Mời mọi người xem qua demo sau để hình dung qua hệ thống này sẽ làm được những gì.
 
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/01L53YswXTA/0.jpg)](http://www.youtube.com/watch?v=01L53YswXTA)
+
 ![alt image](https://ih0.redbubble.net/image.262610461.9685/raf,750x1000,075,t,101010:01c5ca27c6.jpg)
 
 Trông có vẻ ngầu nhưng thật ra hệ thống này cực kỳ đơn giản, chỉ có chưa tới 200 dòng code. Ta có thể chia hệ thống thành các bước như sau để implement từng bước một:
@@ -41,7 +43,7 @@ Trông có vẻ ngầu nhưng thật ra hệ thống này cực kỳ đơn giả
 
 Lưu ý phần này sẽ sử dụng ngôn ngữ python, nếu bạn chưa học hoặc không quen thuộc lắm với python thi cũng đừng lo vì phần code khá dễ hiểu. Ngoài ra bạn cũng có thể đọc [learnpythonthehardway](https://learnpythonthehardway.org/book/) để biết các kiến thức lập trình với python.
 
-1. Import các thư viện cần thiết.
+1.Import các thư viện cần thiết.
 ``` python
 import sys
 from thread import *
@@ -49,7 +51,7 @@ import socket
 import urllib2
 import json
 ```
-2. Khởi tạo 1 socket để nhận lệnh điều khiển đèn.
+2.Khởi tạo 1 socket để nhận lệnh điều khiển đèn.
 ``` python
 HOST = ''
 PORT = 8888 
@@ -76,7 +78,7 @@ while True:
 start_new_thread(receiveCommandThread, (connection,))
 ledControlSocket.close()
 ```
-3. Tạo một hàm để nhận các lệnh được truyền qua socket:
+3.Tạo một hàm để nhận các lệnh được truyền qua socket:
 ``` python
 def receiveCommandThread(connection):
     while True:
@@ -91,7 +93,7 @@ def receiveCommandThread(connection):
             break;
     connection.close()
 ```
-4. Tạo hàm để xử lý command đã nhận được:
+4.Tạo hàm để xử lý command đã nhận được:
 ```python
 def processReceivedCommand(command):
     if command:
@@ -102,11 +104,7 @@ def processReceivedCommand(command):
         else:
             print 'Turning light off'
 ```
-5. Tạo hàm để điều khiển trạng thái led:
-```python
-
-```
-6. File cuối cùng sẽ như sau:
+File cuối cùng sẽ như sau:
 ```python
 import sys
 from thread import *
@@ -161,7 +159,7 @@ while True:
 start_new_thread(receiveCommandThread, (connection,))
 ledControlSocket.close()
 ```
-7. Save file thành led_controller.py và copy vào Pi qua cổng usb.
+5.Save file thành led_controller.py và copy vào Pi qua cổng usb.
 
 ### Setup mạch và led
 
