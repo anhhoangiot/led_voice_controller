@@ -36,7 +36,7 @@ Trông có vẻ ngầu nhưng thật ra hệ thống này cực kỳ đơn giả
 4. Sau khi các file đã copy vào thẻ sd, ta sẽ cắm thẻ sd vào Pi, kết nối với màn hình, bàn phím, chuột và cắm điện.
 
 5. Sau khi pi khởi động và boot từ thẻ sd, chọn Raspbian ở màn hình install và click install
-![install](https://www.raspberrypi.org/learning/noobs-install/images/install.png)
+![install](https://cdn.tutsplus.com/mac/uploads/2013/12/noobs-install.jpg)
 6. Sẽ mất khoảng 15 phút để hoàn thành việc cài đặt và Pi của bạn sẽ sẵn sàng để sử dụng.
 
 ### Lập trình thành phần điều khiển led trên Pi và gửi kết quả lên dashboard
