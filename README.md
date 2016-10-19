@@ -519,7 +519,7 @@ python led_controller.py
 ```
 node server
 ```
-Cuối cùng thì bạn có thể truy cập vào địa chỉ của máy local port 8888 và chạy thử hệ thống vừa tao.
+Cuối cùng thì bạn có thể truy cập vào địa chỉ của máy local port 8080 và chạy thử hệ thống.
 
 ## Lời kết
 
