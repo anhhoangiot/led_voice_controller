@@ -510,6 +510,7 @@ function stopRecording() {
 ```
 
 11.Lưu ý rằng để app chạy được tốt bạn nên dùng firefox vì chrome từ một vài bản gần đây đã thay đổi lại getUserMedia nên có thể phần thu âm sẽ không hoạt động được.
+
 12.Bước cuối cùng là chạy thử toàn bộ hệ thống. Bạn boot vào Pi, vào thư mục đã copy file led_controller.py và chạy dòng lệnh sau:
 ```
 python led_controller.py
