@@ -177,7 +177,7 @@ Save file thành led_controller.py và copy vào Pi qua cổng usb.
 
 ### Setup mạch và led
 
-![board](https://projects.drogon.net/wp-content/uploads/2012/06/1led_bb1.jpg)
+![board](https://cdn.shopify.com/s/files/1/0176/3274/files/LEDs-BB400-1LED_bb_grande.png?6398700510979146820)
 
 ### Tạo web app sử dụng speech to text api của Google
 
