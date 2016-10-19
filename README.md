@@ -43,15 +43,16 @@ Trông có vẻ ngầu nhưng thật ra hệ thống này cực kỳ đơn giả
 
 Lưu ý phần này sẽ sử dụng ngôn ngữ python, nếu bạn chưa học hoặc không quen thuộc lắm với python thi cũng đừng lo vì phần code khá dễ hiểu. Ngoài ra bạn cũng có thể đọc [learnpythonthehardway](https://learnpythonthehardway.org/book/) để biết các kiến thức lập trình với python.
 
-1.Import các thư viện cần thiết.
+Import các thư viện cần thiết.
 ``` python
 import sys
 from thread import *
 import socket
 import urllib2
 import json
+import RPi.GPIO
 ```
-2.Khởi tạo 1 socket để nhận lệnh điều khiển đèn.
+Khởi tạo 1 socket để nhận lệnh điều khiển đèn.
 ``` python
 HOST = ''
 PORT = 8888 
@@ -71,6 +72,12 @@ ledControlSocket.listen(10)
 
 print 'Socket now listening!'
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarning(False)
+// Set điều khiển led ở pin 18
+GPIO.setup(18, GPIO.OUT)
+print 'Setup led on pin 18'
+
 while True:
     connection, address = ledControlSocket.accept()
     print 'Connected with ' + address[0] + ':' + str(address[1])
@@ -78,7 +85,7 @@ while True:
 start_new_thread(receiveCommandThread, (connection,))
 ledControlSocket.close()
 ```
-3.Tạo một hàm để nhận các lệnh được truyền qua socket:
+Tạo một hàm để nhận các lệnh được truyền qua socket:
 ``` python
 def receiveCommandThread(connection):
     while True:
@@ -93,16 +100,16 @@ def receiveCommandThread(connection):
             break;
     connection.close()
 ```
-4.Tạo hàm để xử lý command đã nhận được:
+Tạo hàm để xử lý command đã nhận được:
 ```python
 def processReceivedCommand(command):
     if command:
-        status = 'off'
         if command == '1':
             print 'Turning light on'
-            status = 'on'
+            GPIO.output(18, GPIO.HIGH)
         else:
             print 'Turning light off'
+            GPIO.output(18, GPIO.LOW)
 ```
 File cuối cùng sẽ như sau:
 ```python
@@ -111,6 +118,7 @@ from thread import *
 import socket
 import urllib2
 import json
+import RPi.GPIO as GPIO
 
 HOST = ''
 PORT = 8888 
@@ -130,12 +138,12 @@ def receiveCommandThread(connection):
     
 def processReceivedCommand(command):
     if command:
-        status = 'off'
         if command == '1':
             print 'Turning light on'
-            status = 'on'
+            GPIO.output(18, GPIO.HIGH)
         else:
             print 'Turning light off'
+            GPIO.output(18, GPIO.LOW)
 
 ledControlSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -152,6 +160,12 @@ ledControlSocket.listen(10)
 
 print 'Socket now listening!'
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarning(False)
+// Set điều khiển led ở pin 18
+GPIO.setup(18, GPIO.OUT)
+print 'Setup led on pin 18'
+
 while True:
     connection, address = ledControlSocket.accept()
     print 'Connected with ' + address[0] + ':' + str(address[1])
@@ -159,7 +173,7 @@ while True:
 start_new_thread(receiveCommandThread, (connection,))
 ledControlSocket.close()
 ```
-5.Save file thành led_controller.py và copy vào Pi qua cổng usb.
+Save file thành led_controller.py và copy vào Pi qua cổng usb.
 
 ### Setup mạch và led
 
@@ -215,11 +229,11 @@ ledControlSocket.close()
   "license": "MIT"
 }
 ```
-6. Tiếp theo, bạn mở terminal hoặc command line và gõ lệnh sau:
+6.Tiếp theo, bạn mở terminal hoặc command line và gõ lệnh sau:
 ```
 npm íntall
 ```
-7. Mở file server.js, tại đây ta sẽ tạo một server để gửi file âm thanh đến service của google, xử lý kết quả nhận được và gửi command đến Pi để điều khiển led.
+7.Mở file server.js, tại đây ta sẽ tạo một server để gửi file âm thanh đến service của google, xử lý kết quả nhận được và gửi command đến Pi để điều khiển led.
 ```javascript
 var path = require('path');
 var net = require('net');
@@ -362,9 +376,6 @@ socket.on('error', function(error) {
 socket.on('data', function(data) {
     isConnectionOpen = true;
     console.log('Pi sent: ' + data);
-    if (data == 'authorized') {
-        locked = false;
-    }
 })
 
 socket.on('close', function() {
@@ -373,8 +384,8 @@ socket.on('close', function() {
 })
 
 ```
-8. Tiếp theo là setup giao diện cho trang web. Để thêm phần sinh động thì mình sẽ sử dụng svg và javascript để tạo animation cho giao diện. Tuy nhiên để bài viết được tập trung vào phần chính bạn sẽ không phải edit lại các file này.
-9. Mở file speech.google.js và sửa lại nội dung như sau:
+8.Tiếp theo là setup giao diện cho trang web. Để thêm phần sinh động thì mình sẽ sử dụng svg và javascript để tạo animation cho giao diện. Tuy nhiên để bài viết được tập trung vào phần chính bạn sẽ không phải edit lại các file này.
+9.Mở file speech.google.js và sửa lại nội dung như sau:
 ```javascript
 var recording = false;
 var stream = null;
@@ -488,8 +499,6 @@ function stopRecording() {
     }
     console.log('Recording done...');
     recording = false;
-    console.log(stream);
-    // stream.stop();
     encoder.postMessage({
         cmd: 'finish'
     });
@@ -500,8 +509,8 @@ function stopRecording() {
 }
 ```
 
-11. Lưu ý rằng để app chạy được tốt bạn nên dùng firefox vì chrome từ một vài bản gần đây đã thay đổi lại getUserMedia nên có thể phần thu âm sẽ không hoạt động được.
-12. Bước cuối cùng là chạy thử toàn bộ hệ thống. Bạn boot vào Pi, vào thư mục đã copy file led_controller.py và chạy dòng lệnh sau:
+11.Lưu ý rằng để app chạy được tốt bạn nên dùng firefox vì chrome từ một vài bản gần đây đã thay đổi lại getUserMedia nên có thể phần thu âm sẽ không hoạt động được.
+12.Bước cuối cùng là chạy thử toàn bộ hệ thống. Bạn boot vào Pi, vào thư mục đã copy file led_controller.py và chạy dòng lệnh sau:
 ```
 python led_controller.py
 ```
